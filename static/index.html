@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6f6fb">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; media-src https:; frame-src https://www.youtube-nocookie.com; connect-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Mikkels App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+</head>
+<body>
+<header class="top">
+  <h1 id="title">Lær</h1>
+  <div class="top-right">
+    <span class="pill" id="pill-streak" title="Dage i træk">0</span>
+    <span class="pill" id="pill-xp" title="Point og niveau">0</span>
+    <button class="icon" id="btn-theme" title="Skift lyst/mørkt" aria-label="Skift lyst/mørkt"></button>
+    <button class="icon" id="btn-storage" title="Lager og oprydning" aria-label="Lager og oprydning"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg></button>
+  </div>
+</header>
+
+<main>
+  <section id="tab-learn" class="tab active"><div id="learn"></div></section>
+
+  <section id="tab-yt" class="tab">
+    <form class="search" id="yt-form">
+      <input id="yt-q" type="search" placeholder="Søg på YouTube eller indsæt link" autocomplete="off">
+      <button>Søg</button>
+    </form>
+    <div class="chips" id="yt-moods"></div>
+    <div id="yt-player" class="player hidden"></div>
+    <div id="yt-results" class="grid"></div>
+    <div id="yt-sentinel" class="loading">Henter forslag…</div>
+  </section>
+
+  <section id="tab-pod" class="tab">
+    <form class="search" id="pod-form">
+      <input id="pod-q" type="search" placeholder="Søg efter podcast" autocomplete="off">
+      <button>Søg</button>
+    </form>
+    <h2 class="sub" id="pod-subs-h">Mine podcasts</h2>
+    <div id="pod-subs" class="row-scroll"></div>
+    <div id="pod-list"></div>
+  </section>
+
+  <section id="tab-ai" class="tab">
+    <div class="seg" id="ai-seg">
+      <button data-v="news" class="on">Nyheder</button>
+      <button data-v="events">Events</button>
+    </div>
+    <div id="ai-news" class="ai-view"><div class="chips" id="news-filter"></div><div id="news-list"></div></div>
+    <div id="ai-events" class="ai-view hidden"></div>
+  </section>
+</main>
+
+<div id="audio-bar" class="audio-bar hidden">
+  <div class="audio-title" id="audio-title"></div>
+  <audio id="audio" controls preload="none"></audio>
+</div>
+
+<nav class="tabs">
+  <button data-tab="learn" class="active"><span data-ic="cap"></span>Lær</button>
+  <button data-tab="yt"><span data-ic="play"></span>YouTube</button>
+  <button data-tab="pod"><span data-ic="headphones"></span>Podcasts</button>
+  <button data-tab="ai"><span data-ic="sparkles"></span>AI</button>
+</nav>
+
+<dialog id="storage-dlg">
+  <h3>Lager</h3>
+  <p id="storage-info">Tjekker…</p>
+  <p class="muted">Appen streamer alt og gemmer ingen nye filer. "Ryd alt" sletter de gamle downloads fra MikkelsYT og din YouTube-historik. Dine point og din quiz-fremgang beholdes.</p>
+  <div class="dlg-actions">
+    <button id="storage-clear" class="danger">Ryd alt</button>
+    <button id="storage-close">Luk</button>
+  </div>
+</dialog>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="icons.js"></script>
+<script src="charts.js"></script>
+<script src="static-mode.js"></script>
+<script src="quiz-data.js"></script>
+<script src="explore-data.js"></script>
+<script src="explore-extra.js"></script>
+<script src="app.js"></script>
+<script src="lessons.js"></script>
+<script src="lessons-doa.js"></script>
+<script src="lessons-sys.js"></script>
+<script src="explore.js"></script>
+<script src="gamify.js"></script>
+<script src="profile.js"></script>
+<script src="offline.js"></script>
+<script src="sync.js"></script>
+</body>
+</html>

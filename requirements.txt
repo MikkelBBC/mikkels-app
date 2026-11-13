@@ -1,0 +1,6 @@
+flask
+yt-dlp
+feedparser
+requests
+# kun til evals --judge:
+anthropic>=1.0

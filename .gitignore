@@ -1,0 +1,8 @@
+# Personlige data (fremgang, likes, event-cache) bliver på PC'en
+data/
+# Bygget web-version og cache
+_site/
+__pycache__/
+*.pyc
+evals/reports/
+.claude/settings.local.json
