@@ -133,9 +133,47 @@ function renderProfile() {
     <h3 class="sec">Det du synes om</h3>
     <div class="card-list">
       <div class="likes">${ic("thumbUp")}<b>${liked}</b> liket · ${ic("thumbDown")}<b>${disliked}</b> disliket</div>
-      <p class="muted xs">Tryk tommel op eller ned på kortene i Udforsk. Appen viser flere af de emner du liker, skjuler dem du disliker, og gemmer det også på serveren, så Claude kan se det, når appen skal forbedres.</p>
+      <p class="muted xs">Tryk tommel op eller ned på kortene i Udforsk. Appen viser flere af de emner du liker, skjuler dem du disliker, og husker det på denne enhed.</p>
       ${Object.keys(votes).slice(-6).reverse().map((id) => { const c = CONCEPTS.find((x) => x.id === id); return c ? `<div class="like-row">${ic(votes[id] === 1 ? "thumbUp" : "thumbDown")}<span>${esc(c.title)}</span></div>` : ""; }).join("")}
+    </div>
+
+    <h3 class="sec">Backup af fremgang</h3>
+    <div class="card-list">
+      <p class="muted xs">${STATIC_MODE ? "Din fremgang ligger kun på denne enhed." : "Fremgangen gemmes også i data/progress.json på PC'en."} Gem en backup-fil for at flytte den til en anden enhed, eller giv filen til Claude, så den kan se, hvordan det går.</p>
+      <div class="backup-btns">
+        <button class="btn" id="bk-save">${ic("notes")}Gem backup</button>
+        <button class="btn ghost" id="bk-load">${ic("refresh")}Gendan fra fil</button>
+        <input type="file" id="bk-file" accept="application/json,.json" hidden>
+      </div>
     </div>`;
+  $("#bk-save").onclick = saveBackup;
+  $("#bk-load").onclick = () => $("#bk-file").click();
+  $("#bk-file").onchange = (e) => e.target.files[0] && loadBackup(e.target.files[0]);
+}
+
+// Backup: alle "ma:"-nøgler som én JSON-fil. Gendan kræver bekræftelse og overskriver kun appens egne nøgler.
+function saveBackup() {
+  const data = {};
+  for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k.startsWith("ma:") && k !== "ma:device") data[k] = localStorage.getItem(k); }
+  const blob = new Blob([JSON.stringify({ app: "mikkels-app", version: 1, saved: new Date().toISOString(), xp: game.xp, data }, null, 1)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = `mikkels-app-backup-${today()}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  toast("Backup gemt");
+}
+
+async function loadBackup(file) {
+  try {
+    if (file.size > 3_000_000) throw new Error("Filen er for stor");
+    const b = JSON.parse(await file.text());
+    if (b.app !== "mikkels-app" || typeof b.data !== "object") throw new Error("Det er ikke en backup fra Mikkels App");
+    const entries = Object.entries(b.data).filter(([k, v]) => k.startsWith("ma:") && k !== "ma:device" && typeof v === "string");
+    if (!confirm(`Gendan backup fra ${String(b.saved || "").slice(0, 10)} med ${b.xp || 0} XP? Din nuværende fremgang (${game.xp} XP) bliver erstattet.`)) return;
+    for (const [k, v] of entries) { JSON.parse(v); localStorage.setItem(k, v); }
+    toast("Fremgang gendannet");
+    setTimeout(() => location.reload(), 700);
+  } catch (err) { toast("Kunne ikke gendanne: " + err.message); }
 }
 
 // ------------------------------------------------------------------ kobl ind i fanerne
